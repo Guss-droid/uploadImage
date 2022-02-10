@@ -56,16 +56,15 @@ export default async function handler(
       ...(after && { after: query.Ref(query.Collection('images'), after) }),
     };
 
-    return client
-      .query<ImagesQueryResponse>(
-        query.Map(
-          query.Paginate(
-            query.Documents(query.Collection('images')),
-            queryOptions
-          ),
-          query.Lambda('X', query.Get(query.Var('X')))
-        )
+    return client.query<ImagesQueryResponse>(
+      query.Map(
+        query.Paginate(
+          query.Documents(query.Collection('images')),
+          queryOptions
+        ),
+        query.Lambda('X', query.Get(query.Var('X')))
       )
+    )
       .then(response => {
         const formattedData = response.data.map(item => ({
           ...item.data,
